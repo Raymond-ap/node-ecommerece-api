@@ -17,13 +17,15 @@ router.patch('/:pid', productController.updateProuctById)
 router.delete('/:pid', productController.deleteProductById)
 
 // Route to retrieve product by ID
-router.get('/id?=:pid', productController.getProductById)
+router.get('/id=:pid', productController.getProductById)
 
 // Route to retrieve product by Category
-router.get('/category?=:category', productController.getProductsByCategory)
+router.get('/category=:category', productController.getProductsByCategory)
 
 // Route to retrieve product by Title
-router.get('/title?=:title', productController.getProductsByTitle)
+router.get('/title=:title', productController.getProductsByTitle)
+
+router.get('/limit=:num', productController.getProductByLimit)
 
 
 
