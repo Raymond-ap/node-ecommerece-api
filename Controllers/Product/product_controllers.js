@@ -341,7 +341,31 @@ const getProductByLimit = (req, res, next) => {
 }
 
 
-const createProduct = (req, res, next) => {};
+const createProduct = (req, res, next) => {
+    const {
+        title,
+        price,
+        description,
+        category,
+        image,
+        rating,
+        brand,
+    } = req.body
+
+    const _createdProduct = {
+        id: new Date().getMilliseconds(),
+        title,
+        price,
+        description,
+        category,
+        image,
+        rating,
+        brand,
+    }
+
+    DUMMYPRODUCT.push(_createdProduct)
+    res.status(201).json(DUMMYPRODUCT)
+};
 
 const updateProuctById = (req, res, next) => {};
 
