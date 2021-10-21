@@ -1,6 +1,6 @@
 const HttpError = require("../../Models/HttpError/http-error");
 
-const DUMMYPRODUCT = [
+let DUMMYPRODUCT = [
   {
     id: "1",
     title: "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
@@ -369,7 +369,11 @@ const createProduct = (req, res, next) => {
 
 const updateProuctById = (req, res, next) => {};
 
-const deleteProductById = (req, res, next) => {};
+const deleteProductById = (req, res, next) => {
+    const productId = req.params.pid;
+    DUMMYPRODUCT = DUMMYPRODUCT.filter((item) => {return item.id !== productId})
+    res.json(DUMMYPRODUCT)
+};
 
 exports.getProducts = getProducts;
 exports.getProductById = getProductById;
