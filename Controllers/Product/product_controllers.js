@@ -271,7 +271,7 @@ const DUMMYPRODUCT = [
 
 // Get all products from Db
 const getProducts = (req, res, next) => {
-  res.json({ prosucts: DUMMYPRODUCT });
+  res.json({ products: DUMMYPRODUCT });
 };
 
 const getProductById = (req, res, next) => {
@@ -332,7 +332,13 @@ const getProductsCategories = (req, res, next) => {
 }
 
 
-const getProductByLimit = (req, res, next) => {}
+const getProductByLimit = (req, res, next) => {
+    let limitNumber = req.params.num
+    const products = DUMMYPRODUCT.slice(0, limitNumber).filter((item) => {
+        return item
+    })
+    res.json({products: products})
+}
 
 
 const createProduct = (req, res, next) => {};
@@ -349,3 +355,4 @@ exports.updateProuctById = updateProuctById;
 exports.deleteProductById = deleteProductById;
 exports.getProductsByTitle = getProductsByTitle;
 exports.getProductsCategories = getProductsCategories;
+exports.getProductByLimit = getProductByLimit;
