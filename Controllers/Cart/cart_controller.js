@@ -4,7 +4,7 @@ let DummyCart =
 [
   {
     "id": 1,
-    "userId": 1,
+    "userId": "1",
     "date": "2020-03-02T00:00:02.000Z",
     "products": [
       {
@@ -22,8 +22,8 @@ let DummyCart =
     ],
   },
   {
-    "id": 2,
-    "userId": 1,
+    "id": "2",
+    "userId": "7",
     "date": "2020-01-02T00:00:02.000Z",
     "products": [
       {
@@ -41,8 +41,8 @@ let DummyCart =
     ],
   },
   {
-    "id": 3,
-    "userId": 2,
+    "id": "3",
+    "userId": "2",
     "date": "2020-03-01T00:00:02.000Z",
     "products": [
       {
@@ -56,8 +56,8 @@ let DummyCart =
     ],
   },
   {
-    "id": 4,
-    "userId": 3,
+    "id": "4",
+    "userId": "3",
     "date": "2020-01-01T00:00:02.000Z",
     "products": [
       {
@@ -67,8 +67,8 @@ let DummyCart =
     ],
   },
   {
-    "id": 5,
-    "userId": 3,
+    "id": "5",
+    "userId": "11",
     "date": "2020-03-01T00:00:02.000Z",
     "products": [
       {
@@ -81,32 +81,6 @@ let DummyCart =
       }
     ],
   },
-  {
-    "id": 6,
-    "userId": 4,
-    "date": "2020-03-01T00:00:02.000Z",
-    "products": [
-      {
-        "productId": 10,
-        "quantity": 2
-      },
-      {
-        "productId": 12,
-        "quantity": 3
-      }
-    ],
-  },
-  {
-    "id": 6,
-    "userId": 8,
-    "date": "2020-03-01T00:00:02.000Z",
-    "products": [
-      {
-        "productId": 18,
-        "quantity": 1
-      }
-    ],
-  }
 ]
 
 const getCartItems = (req, res, next) => {
@@ -125,17 +99,19 @@ const getCartItemsByUserId = (req, res, next) => {
 
 
 // Update a quantity for cart item
-const updateCartItemQuantity = (req, res, next) => {
-  const productId = req.params.pid,
-
-}
+const updateCartItemQuantity = (req, res, next) => {}
 
 // Delete Single cart Item
 const deleteCartItemById = (req, res, next) => {}
 
 
 // Delete all cartItems
-const deleteAllCartItems = (req, res, next) => {}
+const deleteAllCartItemsByUserID = (req, res, next) => {
+  const userId = req.params.uid;
+  const cartItem = DummyCart.find((item) => item.userId === userId)
+  cartItem.products = []
+  res.json(cartItem)
+}
 
 
 // Create new cartItem
@@ -161,3 +137,4 @@ const createCartItem = (req, res, next) => {
 exports.getCartItems = getCartItems;
 exports.getCartItemsByUserId = getCartItemsByUserId;
 exports.createCartItem = createCartItem;
+exports.deleteAllCartItemsByUserID = deleteAllCartItemsByUserID;
