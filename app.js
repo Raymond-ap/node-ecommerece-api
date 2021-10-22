@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 
 const ProductRoute = require('./Router/Product/product_router');
+const CartRouter = require('./Router/Cart/cart_router')
 const HttpError = require('./Models/HttpError/http-error');
 
 const app = express()
@@ -10,6 +11,8 @@ app.use(bodyParser.json());
 
 
 app.use('/products', ProductRoute)
+
+app.use('/carts', CartRouter)
 
 
 
