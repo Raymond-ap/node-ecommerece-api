@@ -1,45 +1,113 @@
 const HttpError = require("../../Models/HttpError/http-error");
 
-let DummyCart = [
+let DummyCart = 
+[
   {
-    id: "1",
-    userId: "u1",
-    products: [
+    "id": 1,
+    "userId": 1,
+    "date": "2020-03-02T00:00:02.000Z",
+    "products": [
       {
-        id: "p1",
-        title: "Cart Item one",
-        price: 339,
+        "productId": 1,
+        "quantity": 4
       },
       {
-        id: "p12",
-        title: "Cart Item one",
-        price: 339,
+        "productId": 2,
+        "quantity": 1
       },
+      {
+        "productId": 3,
+        "quantity": 6
+      }
     ],
   },
   {
-    id: "2",
-    userId: "u2",
-    products: [
+    "id": 2,
+    "userId": 1,
+    "date": "2020-01-02T00:00:02.000Z",
+    "products": [
       {
-        id: "p2",
-        title: "Cart Item two",
-        price: 339,
+        "productId": 2,
+        "quantity": 4
       },
+      {
+        "productId": 1,
+        "quantity": 10
+      },
+      {
+        "productId": 5,
+        "quantity": 2
+      }
     ],
   },
   {
-    id: "3",
-    userId: "u3",
-    products: [
+    "id": 3,
+    "userId": 2,
+    "date": "2020-03-01T00:00:02.000Z",
+    "products": [
       {
-        id: "p3",
-        title: "Cart Item three",
-        price: 339,
+        "productId": 1,
+        "quantity": 2
       },
+      {
+        "productId": 9,
+        "quantity": 1
+      }
     ],
   },
-];
+  {
+    "id": 4,
+    "userId": 3,
+    "date": "2020-01-01T00:00:02.000Z",
+    "products": [
+      {
+        "productId": 1,
+        "quantity": 4
+      }
+    ],
+  },
+  {
+    "id": 5,
+    "userId": 3,
+    "date": "2020-03-01T00:00:02.000Z",
+    "products": [
+      {
+        "productId": 7,
+        "quantity": 1
+      },
+      {
+        "productId": 8,
+        "quantity": 1
+      }
+    ],
+  },
+  {
+    "id": 6,
+    "userId": 4,
+    "date": "2020-03-01T00:00:02.000Z",
+    "products": [
+      {
+        "productId": 10,
+        "quantity": 2
+      },
+      {
+        "productId": 12,
+        "quantity": 3
+      }
+    ],
+  },
+  {
+    "id": 6,
+    "userId": 8,
+    "date": "2020-03-01T00:00:02.000Z",
+    "products": [
+      {
+        "productId": 18,
+        "quantity": 1
+      }
+    ],
+  }
+]
 
 const getCartItems = (req, res, next) => {
   res.json({ cartItems: DummyCart });
