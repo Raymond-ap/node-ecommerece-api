@@ -12,4 +12,7 @@ router.get("/:uid", cartController.getCartItemsByUserId);
 // CREATE NEW CART ITEM ROUTE
 router.post("/", cartController.createCartItem);
 
+// DELETE ALL CART ITEM FOR A USER ROUTE
+router.delete("/:uid", cartController.deleteAllCartItemsByUserID);
+
 module.exports = router;
