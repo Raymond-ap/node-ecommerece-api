@@ -1,5 +1,7 @@
 const HttpError = require("../../Models/HttpError/http-error");
 
+const productModel = require('../../Models/Product/product_model')
+
 let DUMMYPRODUCT = [
   {
     id: "1",
@@ -270,56 +272,72 @@ let DUMMYPRODUCT = [
 ];
 
 // Get all products from Db
-const getProducts = (req, res, next) => {
-  res.json({ products: DUMMYPRODUCT });
+const getProducts = async (req, res, next) => {
+  let products;
+  try {
+    products = await productModel.find()
+  } catch (err) {
+    const error = new HttpError("Something went wrong", 500)
+    return next(error)
+  }
+
+  res.json({products: products})
+
 };
 
-const getProductById = (req, res, next) => {
+const getProductById = async(req, res, next) => {
   const productId = req.params.pid;
-  const product = DUMMYPRODUCT.find((item) => {
-    return item.id === productId;
-  });
+  let product;
 
-  if (!product) {
-    const error = new HttpError(
-      "Could not find any product for the provided ID",
-      500
-    );
-    return next(error);
+  // Get Product
+  try {
+    product = await productModel.findById(productId)
+  } catch(err) {
+    const error = new HttpError("Could Not Find Any Product For The Provided Id", 500)
+    return next(error)
   }
+
+  // Check if product is not null
+  if(!product || product.length === 0) {
+    const error = new HttpError("Could Not Find Any Product For The Provided Id", 404)
+    return next(error)
+  }
+  
   res.json(product);
 };
-  
+
 const getProductsByCategory = (req, res, next) => {
   const category = req.params.category;
-  const product = DUMMYPRODUCT.filter((item) => {
-    return item.category === category;
-  });
+  const products; 
 
-  if (!product) {
+  try {
+    products = await productModel.find({category: category})
+  }
+  catch (err) {
     const error = new HttpError(
       "Could not find any product for the provided category",
       500
     );
     return next(error);
   }
-  res.json(product);
+  res.json(products);
 };
 
 const getProductsByTitle = (req, res, next) => {
   const title = req.params.title;
-  const product = DUMMYPRODUCT.filter((item) => {
-    return item.title === title;
-  });
+  const products; 
 
-  if (!product) {
+  try {
+    products = await productModel.find({title: title})
+  }
+  catch (err) {
     const error = new HttpError(
       "Could not find any product for the provided title",
       500
     );
     return next(error);
   }
-  res.json(product);
+  res.json(products);
 };
 
 const getProductsCategories = (req, res, next) => {
