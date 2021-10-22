@@ -138,5 +138,26 @@ const deleteCartItemById = (req, res, next) => {}
 const deleteAllCartItems = (req, res, next) => {}
 
 
+// Create new cartItem
+const createCartItem = (req, res, next) => {
+  const {
+    userId,
+    date,
+    products
+  } = req.body
+
+  const _createdCartItem = {
+    id: new Date().getMilliseconds(),
+    userId,
+    date,
+    products
+  }
+
+  DummyCart.push(_createdCartItem)
+  res.json({cartItems: _createdCartItem})
+}
+
+
 exports.getCartItems = getCartItems;
 exports.getCartItemsByUserId = getCartItemsByUserId;
+exports.createCartItem = createCartItem;
