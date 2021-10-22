@@ -277,7 +277,7 @@ const getProducts = async (req, res, next) => {
   try {
     products = await productModel.find()
   } catch (err) {
-    const error = new HttpError("Something went wrong", 500)
+    const error = new HttpError(err, 500)
     return next(error)
   }
 
@@ -293,7 +293,7 @@ const getProductById = async(req, res, next) => {
   try {
     product = await productModel.findById(productId)
   } catch(err) {
-    const error = new HttpError("Could Not Find Any Product For The Provided Id", 500)
+    const error = new HttpError(err, 500)
     return next(error)
   }
 
@@ -308,46 +308,14 @@ const getProductById = async(req, res, next) => {
 
 const getProductsByCategory = (req, res, next) => {
   const category = req.params.category;
-  const products; 
-
-  try {
-    products = await productModel.find({category: category})
-  }
-  catch (err) {
-    const error = new HttpError(
-      "Could not find any product for the provided category",
-      500
-    );
-    return next(error);
-  }
-  res.json(products);
+ 
 };
 
 const getProductsByTitle = (req, res, next) => {
   const title = req.params.title;
-  const products; 
-
-  try {
-    products = await productModel.find({title: title})
-  }
-  catch (err) {
-    const error = new HttpError(
-      "Could not find any product for the provided title",
-      500
-    );
-    return next(error);
-  }
-  res.json(products);
 };
 
-const getProductsCategories = (req, res, next) => {
-    const categories = DUMMYPRODUCT.map((item) => {
-        console.log(item);
-        return item.category;
-    })
-    var unique = [...new Set(categories)] // to store unique values
-    res.json({categories: unique})
-}
+const getProductsCategories = (req, res, next) => {}
 
 
 const getProductByLimit = (req, res, next) => {
@@ -359,7 +327,7 @@ const getProductByLimit = (req, res, next) => {
 }
 
 
-const createProduct = (req, res, next) => {
+const createProduct = async (req, res, next) => {
     const {
         title,
         price,
@@ -370,27 +338,82 @@ const createProduct = (req, res, next) => {
         brand,
     } = req.body
 
-    const _createdProduct = {
-        id: new Date().getMilliseconds(),
-        title,
-        price,
-        description,
-        category,
-        image,
-        rating,
-        brand,
+    const _createdProduct = new productModel({
+      title,
+      price,
+      description,
+      category,
+      image,
+      rating,
+      brand,
+    })
+
+    try {
+      await _createdProduct.save()
+    } catch(err) {
+      const error = new HttpError(err, 500)
+      return next(error)
     }
 
-    DUMMYPRODUCT.push(_createdProduct)
-    res.status(201).json(DUMMYPRODUCT)
+    res.status(201).json(_createdProduct)
 };
 
-const updateProuctById = (req, res, next) => {};
+const updateProuctById = async (req, res, next) => {
+  const productId = req.params.id;
+  const {
+    title, price, description, category, image, rating
+  } = req.body
 
-const deleteProductById = (req, res, next) => {
+  let product;
+
+  // Get product based on provided id
+  try {
+    product = await productModel.findById(productId)
+  } catch(err) {
+    const error = new HttpError(err, 500)
+    return next(error)
+  }
+
+  // Update properties
+  product.title = title
+  product.price = price
+  product.description = description
+  product.category = category
+  product.image = image
+  product.rating = rating
+
+  // Save Update fields to DB
+  try {
+    await product.save()
+  } catch (err) {
+    const error = new HttpError(err, 500)
+    return next(error)
+  }
+
+  res.status(200).json(product.toObject({ getters: true }))
+};
+
+// DELETE PRODUCT BY ID
+const deleteProductById = async (req, res, next) => {
     const productId = req.params.pid;
-    DUMMYPRODUCT = DUMMYPRODUCT.filter((item) => {return item.id !== productId})
-    res.json(DUMMYPRODUCT)
+    let product;
+
+    try {
+      product = await productModel.findById(productId)
+    } catch (err) {
+      const error = new HttpError(err, 500)
+      return next(error)
+    }
+
+    try {
+      await product.remove()
+    } catch (err) {
+      const error = new HttpError("Failed in deleting product", 500)
+      return next(error)
+    } 
+
+    res.status(200).json({message: "Product deleted Successfully"})
+    
 };
 
 exports.getProducts = getProducts;
