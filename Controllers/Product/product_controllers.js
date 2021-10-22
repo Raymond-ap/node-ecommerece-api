@@ -289,7 +289,7 @@ const getProductById = (req, res, next) => {
   }
   res.json(product);
 };
-
+  
 const getProductsByCategory = (req, res, next) => {
   const category = req.params.category;
   const product = DUMMYPRODUCT.filter((item) => {
