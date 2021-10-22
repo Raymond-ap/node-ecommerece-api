@@ -124,5 +124,19 @@ const getCartItemsByUserId = (req, res, next) => {
 };
 
 
+// Update a quantity for cart item
+const updateCartItemQuantity = (req, res, next) => {
+  const productId = req.params.pid,
+
+}
+
+// Delete Single cart Item
+const deleteCartItemById = (req, res, next) => {}
+
+
+// Delete all cartItems
+const deleteAllCartItems = (req, res, next) => {}
+
+
 exports.getCartItems = getCartItems;
 exports.getCartItemsByUserId = getCartItemsByUserId;
