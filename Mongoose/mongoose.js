@@ -19,6 +19,7 @@ const createProduct = async (req, res, next) => {
     category: req.body.category,
     rating: req.body.image,
     rating: req.body.rating,
+    colors: req.body.colors
   };
   const results = await _product.save();
   res.json(results);
@@ -29,6 +30,7 @@ const createCart = async (req, res, next) => {
   const _cart = {
     userId: req.body.userId,
     products: req.body.products,
+    information: req.body.information,
     date: req.body.date,
   };
   const result = await _cart.save();
