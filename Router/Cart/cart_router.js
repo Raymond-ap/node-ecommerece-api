@@ -15,4 +15,7 @@ router.post("/", cartController.createCartItem);
 // DELETE ALL CART ITEM FOR A USER ROUTE
 router.delete("/:uid", cartController.deleteAllCartItemsByUserID);
 
+// APPEND NEW CARTITEM ROUTE
+router.patch("/:cid", cartController.appendCartItemById);
+
 module.exports = router;
