@@ -9,7 +9,8 @@ const Products = mongoose.Schema({
     rating: {
         rate: { type: Number, required: false},
         count: { type: Number, required: false},
-    }
+    },
+    colors: []
 })
 
 module.exports = mongoose.model("Product", Products)
