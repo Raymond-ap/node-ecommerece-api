@@ -1,140 +1,97 @@
 const HttpError = require("../../Models/HttpError/http-error");
+const CartModel = require("../../Models/Cart/Cart");
 
-let DummyCart = 
-[
-  {
-    "id": 1,
-    "userId": "1",
-    "date": "2020-03-02T00:00:02.000Z",
-    "products": [
-      {
-        "productId": 1,
-        "quantity": 4
-      },
-      {
-        "productId": 2,
-        "quantity": 1
-      },
-      {
-        "productId": 3,
-        "quantity": 6
-      }
-    ],
-  },
-  {
-    "id": "2",
-    "userId": "7",
-    "date": "2020-01-02T00:00:02.000Z",
-    "products": [
-      {
-        "productId": 2,
-        "quantity": 4
-      },
-      {
-        "productId": 1,
-        "quantity": 10
-      },
-      {
-        "productId": 5,
-        "quantity": 2
-      }
-    ],
-  },
-  {
-    "id": "3",
-    "userId": "2",
-    "date": "2020-03-01T00:00:02.000Z",
-    "products": [
-      {
-        "productId": 1,
-        "quantity": 2
-      },
-      {
-        "productId": 9,
-        "quantity": 1
-      }
-    ],
-  },
-  {
-    "id": "4",
-    "userId": "3",
-    "date": "2020-01-01T00:00:02.000Z",
-    "products": [
-      {
-        "productId": 1,
-        "quantity": 4
-      }
-    ],
-  },
-  {
-    "id": "5",
-    "userId": "11",
-    "date": "2020-03-01T00:00:02.000Z",
-    "products": [
-      {
-        "productId": 7,
-        "quantity": 1
-      },
-      {
-        "productId": 8,
-        "quantity": 1
-      }
-    ],
-  },
-]
+// 
+const getCartItems = async (req, res, next) => {
+  let cartItems;
+  try {
+    cartItems = await CartModel.find();
+  } catch (err) {
+    const error = new HttpError(err, 500);
+    return next(error);
+  }
 
-const getCartItems = (req, res, next) => {
-  res.json({ cartItems: DummyCart });
+  res.json({ cartItems: cartItems });
 };
 
 // Get Cart items by user id
-const getCartItemsByUserId = (req, res, next) => {
+const getCartItemsByUserId = async (req, res, next) => {
   const userId = req.params.uid;
-  const cartItem = DummyCart.find((item) => {
-    return item.userId === userId;
-  });
+  let cartItem;
+
+  try {
+    cartItem = await CartModel.find({userId: userId}, {products: 1})
+  } catch (err) {
+    const error = new HttpError(err, 500)
+    return next(error)
+  }
+
+  if(!cartItem || cartItem.length === 0) {
+    return next(new HttpError("Error getting cartitem", 500))
+  }
 
   res.json({ cart: cartItem });
 };
 
-
 // Update a quantity for cart item
-const updateCartItemQuantity = (req, res, next) => {}
+const updateCartItemQuantity = async (req, res, next) => {};
 
 // Delete Single cart Item
-const deleteCartItemById = (req, res, next) => {}
-
+const deleteCartItemById = async (req, res, next) => {};
 
 // Delete all cartItems
-const deleteAllCartItemsByUserID = (req, res, next) => {
-  const userId = req.params.uid;
-  const cartItem = DummyCart.find((item) => item.userId === userId)
-  cartItem.products = []
-  res.json(cartItem)
-}
-
+const deleteAllCartItemsByUserID = async (req, res, next) => {};
 
 // Create new cartItem
-const createCartItem = (req, res, next) => {
-  const {
-    userId,
-    date,
-    products
-  } = req.body
+const createCartItem = async (req, res, next) => {
+  const { userId, date, products, information } = req.body;
 
-  const _createdCartItem = {
-    id: new Date().getMilliseconds(),
+  const _createdCartItem = new CartModel({
     userId,
     date,
-    products
+    products,
+    information
+  });
+
+  try {
+    await _createdCartItem.save()
+  } catch(err) {
+    const error = new HttpError(err, next)
+    return next(error)
   }
 
-  DummyCart.push(_createdCartItem)
-  res.json({cartItems: _createdCartItem})
-}
+  res.status(201).json(_createdCartItem)
+};
 
+
+const appendCartItemById = async (res, req, next) => {
+  const {products} = req.body
+  const cartId =req.params.cid;
+  let cartItem;
+
+  // Get cartItem
+  try {
+    cartItem = await CartModel.findById(cartId)
+  } catch(err) {
+    const error = new HttpError(err, 500)
+    return next(error)
+  }
+
+  // append new cartItem
+  cartItem.products.push(...products)
+
+  try {
+    await cartItem.save()
+  } catch(err) {
+    const error = new HttpError(err, 500)
+    return next(error)
+  }
+
+  res.status(200).json(cartItem.toObject({ getters: true }))
+}
 
 exports.getCartItems = getCartItems;
 exports.getCartItemsByUserId = getCartItemsByUserId;
 exports.createCartItem = createCartItem;
 exports.deleteAllCartItemsByUserID = deleteAllCartItemsByUserID;
+exports.appendCartItemById = appendCartItemById;
