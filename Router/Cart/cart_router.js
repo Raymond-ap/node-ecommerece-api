@@ -13,9 +13,12 @@ router.get("/:uid", cartController.getCartItemsByUserId);
 router.post("/", cartController.createCartItem);
 
 // DELETE ALL CART ITEM FOR A USER ROUTE
-router.delete("/:uid", cartController.deleteAllCartItemsByUserID);
+router.delete("/:cid", cartController.deleteAllCartItemsByUserID);
+
+// DELETE SINGLE CART ITEM
+// router.delete('/:cid/:pid', cartController.deleteCartItemById)
 
 // APPEND NEW CARTITEM ROUTE
-router.patch("/:cid", cartController.appendCartItemById);
+router.patch("/:cartId", cartController.appendCartItemById);
 
 module.exports = router;
