@@ -8,9 +8,6 @@ const Carts = mongoose.Schema({
             quantity: { type: Number, required: false}
         }
     ],
-    information: {
-        colors: []
-    },
     date: {type: String, required: false}
 })
 

@@ -3,7 +3,7 @@ const Product = require("../Models/Product/product_model");
 const Cart = require("../Models/Cart/Cart");
 const User = require("../Models/User/Users");
 
-const url = "";
+const url = "mongodb+srv://raymond:nM7i1ryhe9tBmf29@cluster0.vmmvh.mongodb.net/ecommerce?retryWrites=true&w=majority";
 
 mongoose
   .connect(url)
@@ -30,7 +30,6 @@ const createCart = async (req, res, next) => {
   const _cart = {
     userId: req.body.userId,
     products: req.body.products,
-    information: req.body.information,
     date: req.body.date,
   };
   const result = await _cart.save();

@@ -2,9 +2,11 @@ const HttpError = require("../../Models/HttpError/http-error");
 
 const productModel = require("../../Models/Product/product_model");
 
+
 // FETCH ALL PRODUCT DATA FROM DB
 const getProducts = async (req, res, next) => {
   let products;
+  
   try {
     products = await productModel.find();
   } catch (err) {
@@ -12,7 +14,7 @@ const getProducts = async (req, res, next) => {
     return next(error);
   }
 
-  res.json({ products: products });
+  res.json(products);
 };
 
 // GET SINGLE PRODUCT BASED ON PROVIDED ID
@@ -39,18 +41,53 @@ const getProductById = async (req, res, next) => {
   res.json(product);
 };
 
+
 // FILTER DATA BY CATEGORY NAME
 const getProductsByCategory = async (req, res, next) => {
   const category = req.params.category;
+  let product;
+
+  try {
+    product = await productModel.find({category: category})
+  } catch(err) {
+    const error = new HttpError(err, 500)
+    return next(error)
+  }
+  res.json(product)
 };
+
 
 // FILTER DATA BY TITLE
 const getProductsByTitle = async (req, res, next) => {
   const title = req.params.title;
+  let product
+  try {
+    product = await productModel.find({title: title})
+  } catch(err) {
+    const error = new HttpError(err, 500)
+    return next(error)
+  }
+  res.json(product)
 };
 
+
 // GET ALL DATA CATEGORIES
-const getProductsCategories = async (req, res, next) => {};
+const getProductsCategories = async (req, res, next) => {
+  let products;
+  let categories;
+  let unique;
+
+  try {
+    products = await productModel.find()
+    categories = products.map((item) => {return item.category;})
+    unique = [...new Set(categories)]
+  } catch(err) {
+    const error = new HttpError(err, 500)
+    return next(error)
+  }
+  res.json(unique)
+};
+
 
 // FILTER PRODUCT BY LIMITED COUNT
 const getProductByLimit = async (req, res, next) => {
@@ -69,6 +106,7 @@ const getProductByLimit = async (req, res, next) => {
 
   res.json({ products: products });
 };
+
 
 // CREATE NEW DATA TO DB
 const createProduct = async (req, res, next) => {
@@ -95,6 +133,7 @@ const createProduct = async (req, res, next) => {
 
   res.status(201).json(_createdProduct);
 };
+
 
 // UPDATE DATA BY ID
 const updateProuctById = async (req, res, next) => {
@@ -131,6 +170,7 @@ const updateProuctById = async (req, res, next) => {
 
   res.status(200).json(product.toObject({ getters: true }));
 };
+
 
 // DELETE PRODUCT BY ID
 const deleteProductById = async (req, res, next) => {
